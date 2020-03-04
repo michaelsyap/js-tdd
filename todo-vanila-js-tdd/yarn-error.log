@@ -1,0 +1,47 @@
+Arguments: 
+  /Users/CELA_1702_141/.nvm/versions/node/v8.15.0/bin/node /Users/CELA_1702_141/.yarn/bin/yarn.js add --dev jest
+
+PATH: 
+  /usr/local/opt/openssl/bin:/Users/CELA_1702_141/.phpenv/shims:/Users/CELA_1702_141/.phpenv/bin:/Users/CELA_1702_141/.yarn/bin:/Users/CELA_1702_141/.config/yarn/global/node_modules/.bin:/Users/CELA_1702_141/.pyenv/shims:node_modules/.bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/openssl/bin:/Users/CELA_1702_141/.phpenv/shims:/Users/CELA_1702_141/.phpenv/bin:/Users/CELA_1702_141/.yarn/bin:/Users/CELA_1702_141/.config/yarn/global/node_modules/.bin:/Users/CELA_1702_141/.pyenv/shims:/Users/CELA_1702_141/.nvm/versions/node/v8.15.0/bin:node_modules/.bin:/Users/CELA_1702_141/.yadr/bin:/Users/CELA_1702_141/.yadr/bin/yadr:/Users/CELA_1702_141/Library/Android/sdk/tools:/Users/CELA_1702_141/Library/Android/sdk/platform-tools:/Applications/MAMP/Library/bin/:/Users/CELA_1702_141/Library/Android/sdk/tools:/Users/CELA_1702_141/Library/Android/sdk/platform-tools:/Applications/MAMP/Library/bin/
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.15.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "todo-vanila-js-tdd",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+      "test": "tests"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Found incompatible module
+      at new MessageError (/Users/CELA_1702_141/.yarn/lib/cli.js:186:110)
+      at checkOne (/Users/CELA_1702_141/.yarn/lib/cli.js:62444:11)
+      at Object.check (/Users/CELA_1702_141/.yarn/lib/cli.js:62463:5)
+      at /Users/CELA_1702_141/.yarn/lib/cli.js:22803:73
+      at Generator.next (<anonymous>)
+      at step (/Users/CELA_1702_141/.yarn/lib/cli.js:98:30)
+      at /Users/CELA_1702_141/.yarn/lib/cli.js:109:13
+      at <anonymous>

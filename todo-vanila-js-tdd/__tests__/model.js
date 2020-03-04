@@ -1,0 +1,1 @@
+describe('Tests for the todo application model')
