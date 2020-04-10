@@ -30,9 +30,6 @@ describe('Model', function() {
       remove: jasmine.createSpy('remove').and.callFake(function(todo) {
         return Promise.resolve(true)
       }),
-      update: jasmine.createSpy('update').and.callFake(function(todo) {
-        return Promise.resolve(todo);
-      }),
       find: jasmine.createSpy('find', function(callback){
         callback(todoItems[1])
       }),
