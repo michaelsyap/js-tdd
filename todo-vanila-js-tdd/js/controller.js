@@ -6,15 +6,20 @@
 
     view.bindEvent('createTodo', (function(todoTitle) {
 
-      this.model.create({
+      this.createTodo({
         title: todoTitle,
         status: 'pending'
-      });
+      })
 
     }).bind(this));
 
 
   }
+
+
+  Controller.prototype.createTodo = function(todo) {
+    this.model.create(todo);
+  };
 
   window.app = window.app || {};
   window.app.Controller = Controller;
