@@ -1,8 +1,6 @@
-describe('Model', function() {
+describe('Model Tests', function() {
 
   var storage, todoModel;
-
-
 
   var todoItems = [
     {
