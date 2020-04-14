@@ -11,7 +11,6 @@
     this._storeName = name;
   }
 
-
   Store.prototype.saveV1 = function(todoItem){
     var newTodoItem = Object.assign({
       id: ID(),
@@ -34,28 +33,35 @@
   }
 
   Store.prototype.save = function(todoItem){
-    var todoItems = this.findAll();
-    var newTodoItem;
-    var isTodoExisting = this.find(todoItem.id);
+    var newTodoItems;
 
-    var newTodoItem = Object.assign({
-      id: ID(),
-      dateCreated: new Date().toISOString()
-    }, todoItem);
+    return this
+            .findAll()
+            .then((function(result) {
 
-    return new Promise((function(resolve, reject) {
+              var newTodoItem = Object.assign({
+                id: ID(),
+                dateCreated: new Date().toISOString()
+              }, todoItem);
 
-      try {
+              return new Promise((function(resolve, reject) {
 
+                try {
+                  newTodoItems = [newTodoItem].concat(result);
 
-        localStorage.setItem(this._storeName, JSON.stringify([newTodoItem]));
+                  console.log(newTodoItems)
+                  console.log(this._storeName)
 
-        resolve(newTodoItem)
-      } catch(error) {
-        reject(error);
-      }
+                  localStorage.setItem(this._storeName, JSON.stringify(newTodoItems));
 
-    }).bind(this))
+                  resolve(newTodoItem)
+                } catch(error) {
+                  reject(error);
+                }
+
+              }).bind(this))
+
+            }).bind(this))
 
   }
 
@@ -68,7 +74,9 @@
 
         todoItems = JSON.parse(localStorage.getItem(this._storeName));
 
-        resolve(todoItems);
+        console.log(localStorage.getItem(this._storeName));
+
+        resolve(todoItems || []);
       } catch(error) {
         reject(error);
       }
@@ -93,6 +101,8 @@
           return item.id === id;
         })
 
+
+
         resolve(todoItem[0] || null)
 
       } catch(error) {
@@ -100,6 +110,72 @@
       }
 
     }).bind(this));
+  }
+
+
+  Store.prototype.update = function(todoItem){
+    var newTodoItems;
+
+    return this
+            .findAll()
+            .then((function(storedTodoItems) {
+              var existingTodoItemIndex = storedTodoItems.findIndex(function(item) {
+                return item.id === todoItem.id
+              });
+
+              return new Promise((function(resolve, reject) {
+
+                try {
+                  newTodoItems = storedTodoItems.slice(0, existingTodoItemIndex);
+                  newTodoItems = newTodoItems.concat([todoItem]);
+                  newTodoItems = newTodoItems.concat(storedTodoItems.slice(existingTodoItemIndex + 1));
+
+                  localStorage.setItem(this._storeName, JSON.stringify(newTodoItems));
+
+                  resolve(todoItem)
+                } catch(error) {
+                  reject(error);
+                }
+
+              }).bind(this))
+
+            }).bind(this))
+
+  }
+
+
+  Store.prototype.remove = function(id) {
+
+    return this
+            .findAll()
+            .then((function(storedTodoItems) {
+              var existingTodoItemIndex = storedTodoItems.findIndex(function(item) {
+                return item.id === id
+              });
+
+              return new Promise((function(resolve, reject) {
+
+                try {
+                  newTodoItems = storedTodoItems.slice(0, existingTodoItemIndex);
+                  newTodoItems = newTodoItems.concat(storedTodoItems.slice(existingTodoItemIndex + 1));
+
+                  if(existingTodoItemIndex != -1) {
+                    localStorage.setItem(this._storeName, JSON.stringify(newTodoItems));
+                    resolve(true)
+                  } else {
+                    resolve(false)
+                  }
+
+
+
+
+                } catch(error) {
+                  reject(error);
+                }
+
+              }).bind(this))
+
+            }).bind(this))
   }
 
   window.app = window.app || {};

@@ -1,5 +1,6 @@
-describe('Console Todo App Tests', function() {
+describe('Todo App', function() {
 
+  var store;
   var sampleTodos = [
     {
       id: '1',
@@ -20,148 +21,65 @@ describe('Console Todo App Tests', function() {
       status: 'pending'
     }
   ];
-  var store;
+
+
 
   function setupLocalStorageMock(storeTest) {
     var store = storeTest || {};
 
-    spyOn(localStorage, 'getItem').and.callFake(function (key) {
-      return store[key];
-    });
-    spyOn(localStorage, 'setItem').and.callFake(function (key, value) {
+    spyOn(localStorage, 'setItem').and.callFake(function(key, value) {
       return store[key] = value + '';
-    });
-    spyOn(localStorage, 'clear').and.callFake(function () {
-        store = {};
-    });
+    })
+
+    spyOn(localStorage, 'getItem').and.callFake(function(key) {
+      return store[key];
+    })
+
   }
 
-
   beforeEach(function() {
-    store = new app.Store('todoPresentation');
-
+    store = new app.Store('todoApp');
 
   })
 
-  // Create Todo Item
-  it('Should be able to create a todo item', function() {
+
+
+  // CRUD
+
+  it('Should be able to create a new todo item', function() {
     var newTodoItem = {
-      title: 'This is a new task 1',
+      title: 'This is a new task',
       status: 'pending'
     };
 
-    setupLocalStorageMock({
-      'todoPresentation': JSON.stringify([])
-    });
-
-    return store
-      .save(newTodoItem)
-      .then(function(result) {
-
-        // Check the result if it contains what you send to localstorage
-        expect(result).toEqual(jasmine.objectContaining({
-          title: newTodoItem.title,
-          status: 'pending'
-        }))
-
-        // Check also if localStorage was called in the process
-        expect(localStorage.setItem).toHaveBeenCalled();
-
-      });
-
-  });
-
-  // Read Todo Items
-  it('Should be able to return all todo items', function() {
 
     setupLocalStorageMock({
-      'todoPresentation': JSON.stringify(sampleTodos)
+      'todoApp': JSON.stringify([])
     });
 
-    return store
-            .findAll()
-            .then(function(result) {
+    expect(store.save(newTodoItem)).toEqual(jasmine.objectContaining({
+      title: newTodoItem.title,
+      status: newTodoItem.status
+    }))
 
-              expect(result).toEqual(sampleTodos);
-
-              expect(localStorage.getItem).toHaveBeenCalled();
-            });
-  })
-
-  it('Should be able to return a specific todo item', function() {
-
-    setupLocalStorageMock({
-      'todoPresentation': JSON.stringify(sampleTodos)
-    });
-
-    return store
-            .find(sampleTodos[0].id)
-            .then(function(result) {
-
-              expect(result).toEqual(sampleTodos[0]);
-
-              expect(localStorage.getItem).toHaveBeenCalled();
-            });
-
-  })
-
-  it('Should be able to return null when there is no todo item returned', function() {
-
-    setupLocalStorageMock({
-      'todoPresentation': JSON.stringify(sampleTodos)
-    });
-
-    return store
-            .find('10')
-            .then(function(result) {
-
-              expect(result).toBeFalsy();
-
-              expect(localStorage.getItem).toHaveBeenCalled();
-            });
-
-  })
-
-
-  it('Should be able to update a specific todo item', function(){
-
-    setupLocalStorageMock({
-      'todoPresentation': JSON.stringify(sampleTodos)
-    });
-
-    return store
-            .update(Object.assign(sampleTodos[2], { status: 'done' }))
-            .then(function(result) {
-
-              expect(result).toEqual(jasmine.objectContaining({
-                status: 'done'
-              }))
-
-              expect(localStorage.getItem).toHaveBeenCalled();
-              expect(localStorage.setItem).toHaveBeenCalled();
-
-            })
+    expect(localStorage.getItem).toHaveBeenCalled()
+    expect(localStorage.setItem).toHaveBeenCalled()
 
   });
 
 
-  it('Should be able to remove a specific todo item', function(){
-
+  it('Should be able to read all the todo items', function() {
     setupLocalStorageMock({
-      'todoPresentation': JSON.stringify(sampleTodos)
+      'todoApp': JSON.stringify(sampleTodos)
     });
 
-    return store
-            .remove(sampleTodos[1].id)
-            .then(function(result) {
+    console.log(store.findAll());
 
-              expect(result).toBeTruthy();
+    expect(store.findAll()).toEqual(sampleTodos)
 
-              expect(localStorage.getItem).toHaveBeenCalled();
-              expect(localStorage.setItem).toHaveBeenCalled();
-
-            })
+    expect(localStorage.getItem).toHaveBeenCalledWith('todoApp')
 
   });
 
-});
+
+})
