@@ -16,6 +16,25 @@
 
   }
 
+  Controller.prototype.setView = function() {
+
+
+    return new Promise((function(resolve, reject) {
+
+      this.model.read()
+        .then((function(todoItemsData) {
+
+          resolve(todoItemsData);
+
+          this.view.render(todoItemsData);
+
+        }).bind(this));
+
+    }).bind(this));
+
+
+  };
+
 
   Controller.prototype.createTodo = function(todo) {
     this.model.create(todo);
