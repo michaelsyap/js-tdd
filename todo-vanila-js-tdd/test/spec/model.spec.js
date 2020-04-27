@@ -5,20 +5,29 @@ describe('Model Tests', function() {
   var todoItems = [
     {
       id: 1,
-      text: 'Buy some apples from the grocery',
-      status: 'pending'
+      title: 'Buy some apples from the grocery',
+      status: 'pending',
+      dateCreated: new Date().toISOString()
     },
     {
       id: 2,
-      text: 'Buy some apples from the grocery',
-      status: 'pending'
+      title: 'Buy some apples from the grocery',
+      status: 'done',
+      dateCreated: new Date().toISOString()
     },
     {
       id: 3,
-      text: 'Buy some apples from the grocery',
-      status: 'pending'
+      title: 'Buy some apples from the grocery',
+      status: 'pending',
+      dateCreated: new Date().toISOString()
     },
-  ]
+    {
+      id: '4',
+      title: 'Buy some apples from the grocery',
+      status: 'done',
+      dateCreated: new Date().toISOString()
+    },
+  ];
 
   var createStorageStub = function(name, todoItems) {
     return {
@@ -31,8 +40,28 @@ describe('Model Tests', function() {
       find: jasmine.createSpy('find', function(callback){
         callback(todoItems[1])
       }),
-      findAll: jasmine.createSpy('findAll').and.callFake(function() {
-        return Promise.resolve(todoItems)
+      findAll: jasmine.createSpy('findAll').and.callFake(function(filter) {
+
+        var query = todoItems.filter(function(todoItem) {
+
+          // Scan through the keys in the filter object
+          for(key in filter) {
+
+            // If at least one of the properties of the todo item
+            // doesn't match the corresponding filter,
+            // do not include this specific todo item
+            if(todoItem[key] != filter[key]) {
+              return false;
+            }
+
+          }
+
+          // If it didn't return any false in the condition above,
+          // obviously this todo item passes the filter test
+          return true;
+        });
+
+        return filter ? query : todoItems || [];
       }),
     }
   };
@@ -49,7 +78,6 @@ describe('Model Tests', function() {
 			text: 'Buy some apples from the grocery',
 			status: 'pending'
     };
-
 
     return todoModel
             .create(newTodoItem)
@@ -78,6 +106,24 @@ describe('Model Tests', function() {
                 expect(storage.findAll).toHaveBeenCalled();
               })
 
+  });
+
+  it('should be able to filter todo items', function() {
+    const expectedArray = [
+      todoItems[1],
+      todoItems[3]
+    ];
+
+    return todoModel
+            .read({
+              status: 'done'
+            })
+            .then(function(result) {
+              expect(result.length).toEqual(2);
+              expect(result).toEqual(expectedArray);
+
+              expect(storage.findAll).toHaveBeenCalled();
+            })
   });
 
   it('should be able to update a todo item', function() {

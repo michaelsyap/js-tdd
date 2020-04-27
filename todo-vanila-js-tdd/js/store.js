@@ -20,9 +20,29 @@
    * To find through localStorage for all the todo items
    *
    */
-  Store.prototype.findAll = function(){
+  Store.prototype.findAll = function(filter){
     var todos = JSON.parse(localStorage.getItem(this.storeName));
-    return todos || [];
+
+    var query = todos.filter(function(todoItem) {
+
+      // Scan through the keys in the filter object
+      for(key in filter) {
+
+        // If at least one of the properties of the todo item
+        // doesn't match the corresponding filter,
+        // do not include this specific todo item
+        if(todoItem[key] != filter[key]) {
+          return false;
+        }
+
+      }
+
+      // If it didn't return any false in the condition above,
+      // obviously this todo item passes the filter test
+      return true;
+    });
+
+    return filter ? query : todos || [];
   };
 
 
@@ -49,7 +69,10 @@
     var existingTodo = this.find(todo);
     var existingTodoIndex;
     var updatedArray = [];
-    var newTodo = !existingTodo && Object.assign({id: uuidv4()}, todo);
+    var newTodo = !existingTodo && Object.assign({
+      id: uuidv4(),
+      dateCreated: new Date().toISOString()
+    }, todo);
 
     console.log(existingTodo);
     console.log(todos);
@@ -72,7 +95,7 @@
     localStorage.setItem(this.storeName, JSON.stringify(updatedArray))
 
 
-    return existingTodo ? todo : newTodo;
+    return existingTodo ? Promise.resolve(todo) : Promise.resolve(newTodo);
   };
 
 
