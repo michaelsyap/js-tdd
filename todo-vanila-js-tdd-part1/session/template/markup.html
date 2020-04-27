@@ -1,0 +1,120 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="vendor/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+  <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+
+  <div class="app-wrapper">
+    <header class="todo-app-header-container">
+      <h1 class="text-center">TDD Todo App</h1>
+
+      <div class="alert alert-warning" role="alert">
+        <input id="todo-create-input" class="form-control create-todo" placeholder="What do you want to do?...">
+      </div>
+    </header>
+
+    <section class="todo-items-container">
+      <ul class="list-group list-group-flush todo-items list-unstyled">
+        <li class="list-group-item todo-item">
+          <div class="row todo-item-parts">
+            <div class="checkbox-column col-md-1">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" />
+              </div>
+            </div>
+            <div class="title-column col-md-10">
+              <span class="todo-title">Todo title here...</span>
+              <input class="form-control todo-title-edit"  />
+            </div>
+            <button class="btn btn-danger remove-todo">X</button>
+          </div>
+
+        </li>
+        <li class="list-group-item --editing todo-item">
+          <div class="row todo-item-parts">
+            <div class="checkbox-column col-md-1">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" />
+              </div>
+            </div>
+            <div class="title-column col-md-10">
+              <span class="todo-title">Todo title here...</span>
+              <input class="form-control todo-title-edit"  />
+            </div>
+            <button class="btn btn-danger remove-todo">X</button>
+          </div>
+
+        </li>
+        <li class="list-group-item --done todo-item">
+          <div class="row todo-item-parts">
+            <div class="checkbox-column col-md-1">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" />
+              </div>
+            </div>
+            <div class="title-column col-md-10">
+              <span class="todo-title">Todo title here...</span>
+              <input class="form-control todo-title-edit"  />
+            </div>
+            <button class="btn btn-danger remove-todo">X</button>
+          </div>
+
+        </li>
+      </ul>
+    </section>
+
+
+    <footer class="todo-filters">
+      <ul class="list-group list-group-horizontal-md">
+        <li class="list-group-item todo-filter">
+          <button class="btn btn-primary" disabled>All</button>
+        </li>
+        <li class="list-group-item todo-filter">
+          <button class="btn btn-primary">Pending</button>
+        </li>
+        <li class="list-group-item todo-filter">
+          <button class="btn btn-primary">Done</button>
+        </li>
+      </ul>
+    </footer>
+  </div>
+
+  <script src="vendor/modernizr-3.8.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="vendor/jquery-3.4.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+  <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+  <script>
+    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')
+  </script>
+  <script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>
