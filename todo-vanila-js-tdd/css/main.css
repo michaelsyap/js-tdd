@@ -263,3 +263,75 @@ textarea {
   }
 }
 
+
+
+.app-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.todo-app-header-container {
+  margin-bottom: 30px;
+}
+
+.todo-items-container {
+  margin-bottom: 30px;
+}
+
+.todo-items {
+}
+
+
+.todo-item-parts {
+}
+
+.todo-item-parts > .remove-todo {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.todo-item.--editing .todo-item-parts > .remove-todo {
+  top: 10px;
+}
+
+
+.title-column > .todo-title {
+  display: block;
+}
+
+.title-column > .todo-title-edit {
+  display: none;
+}
+
+.todo-item.--editing .title-column > .todo-title-edit {
+  display: block;
+}
+
+.todo-item.--editing .title-column > .todo-title {
+  display: none;
+}
+
+
+.todo-item.--done {
+  opacity: .6;
+}
+
+.todo-item.--done .todo-title {
+  text-decoration: line-through;
+}
+
+
+.todo-filters {
+
+}
+
+.todo-filters > .list-group {
+  justify-content: center;
+}
+
+.todo-filter > .btn {
+  min-width: 100px;
+}
+

@@ -18,14 +18,19 @@
 
   };
 
-  Model.prototype.read = function(todo) {
+  Model.prototype.read = function(filter) {
 
     return new Promise((function(resolve, reject) {
 
-      this.storage.findAll()
-        .then(function onReadSuccess(data) {
-          resolve(data)
-        });
+      if(filter) {
+
+        resolve(this.storage.findAll(filter))
+
+      } else {
+
+        resolve(this.storage.findAll())
+      }
+
 
     }).bind(this))
 
