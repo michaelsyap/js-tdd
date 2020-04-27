@@ -73,7 +73,7 @@
 			var status = '';
 			var checked = '';
 
-			if (data[i].status === ' done') {
+			if (data[i].status === 'done') {
 				status = ' --done';
 				checked = 'checked';
 			}
