@@ -9,7 +9,7 @@
   window.onload = function() {
     console.log('Starting app...');
 
-    controller.setView('');
+    controller.setView(document.location.hash);
   };
 
 

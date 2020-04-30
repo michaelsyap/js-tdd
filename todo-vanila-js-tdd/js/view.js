@@ -29,6 +29,10 @@
 
     switch(event) {
       case 'createTodo':
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
+         * For some elements, including <input type="text">, the change event doesn't fire until the control loses focus. Try entering something into the field below, and then click somewhere else to trigger the event.
+         */
         this.$todoCreateInput.addEventListener('change', (function() {
           eventHandler(this.$todoCreateInput.value)
         }).bind(this))

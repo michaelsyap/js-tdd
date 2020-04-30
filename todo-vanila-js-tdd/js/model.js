@@ -7,7 +7,7 @@
 
   Model.prototype.create = function(todo) {
 
-    return new Promise((function(resolve, reject){
+    return new Promise((function (resolve, reject){
 
       this.storage.save(todo)
         .then(function onSaveSuccess(data) {
@@ -24,11 +24,18 @@
 
       if(filter) {
 
-        resolve(this.storage.findAll(filter))
+        this.storage.findAll(filter)
+              .then(function(result) {
+                resolve(result)
+              })
 
       } else {
 
-        resolve(this.storage.findAll())
+        this.storage.findAll()
+          .then(function(result) {
+            resolve(result)
+          })
+
       }
 
 
