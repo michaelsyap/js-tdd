@@ -4,26 +4,26 @@ describe('Model Tests', function() {
 
   var todoItems = [
     {
-      id: 1,
+      id: '1',
       title: 'Buy some apples from the grocery',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
-      id: 2,
-      title: 'Buy some apples from the grocery',
+      id: '2',
+      title: 'Get some gifts',
       status: 'done',
       dateCreated: new Date().toISOString()
     },
     {
-      id: 3,
-      title: 'Buy some apples from the grocery',
+      id: '3',
+      title: 'Finish homework',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
       id: '4',
-      title: 'Buy some apples from the grocery',
+      title: 'Sleep by 10pm',
       status: 'done',
       dateCreated: new Date().toISOString()
     },
@@ -36,9 +36,6 @@ describe('Model Tests', function() {
       }),
       remove: jasmine.createSpy('remove').and.callFake(function(todo) {
         return Promise.resolve(true)
-      }),
-      find: jasmine.createSpy('find', function(callback){
-        callback(todoItems[1])
       }),
       findAll: jasmine.createSpy('findAll').and.callFake(function(filter) {
 
@@ -61,7 +58,7 @@ describe('Model Tests', function() {
           return true;
         });
 
-        return filter ? query : todoItems || [];
+        return filter ? Promise.resolve(query) : Promise.resolve(todoItems || []);
       }),
     }
   };
@@ -99,7 +96,7 @@ describe('Model Tests', function() {
     return  todoModel
               .read()
               .then(function(result) {
-                // A successful read to the database should reter all todo items
+                // A successful read to the database should return all todo items
                 expect(result).toBe(todoItems);
 
                 // One way to check if this feature worked is if the function was able to make a call to database
@@ -128,7 +125,7 @@ describe('Model Tests', function() {
 
   it('should be able to update a todo item', function() {
     var todoItemForUpdate = {
-      id: 1,
+      id: '1',
       status: 'done'
     };
 
@@ -150,7 +147,7 @@ describe('Model Tests', function() {
 
   it('should be able to delete a todo item', function(){
     var todoItemForDelete = {
-      id: 1,
+      id: '1',
       text: 'Buy some apples from the grocery',
       status: 'pending'
     };

@@ -10,19 +10,19 @@ describe('Controller', function() {
     },
     {
       id: '2',
-      title: 'Buy some apples from the grocery',
+      title: 'Get some gifts',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
       id: '3',
-      title: 'Buy some apples from the grocery',
+      title: 'Finish homework',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
       id: '4',
-      title: 'Buy some apples from the grocery',
+      title: 'Sleep by 10pm',
       status: 'done',
       dateCreated: new Date().toISOString()
     },
@@ -33,7 +33,8 @@ describe('Controller', function() {
 
     model.create.and.callFake(function(newTodoItem) {
       return Promise.resolve(Object.assign({
-        id: '1'
+        id: '1',
+        dateCreated: new Date().toISOString()
       }, newTodoItem))
     });
 
@@ -68,7 +69,7 @@ describe('Controller', function() {
 
   }
 
-  function createViewStub() {
+  function createViewMock() {
     var eventRegistry = {};
 
     return {
@@ -86,7 +87,7 @@ describe('Controller', function() {
 
   beforeEach(function() {
     model = jasmine.createSpyObj('model', ['create', 'read']);
-    view = createViewStub();
+    view = createViewMock();
     controller = new app.Controller(model, view);
   })
 
@@ -202,6 +203,12 @@ describe('Controller', function() {
         title: 'New todo item',
         status: 'pending'
       };
+      var newTodoWithIdAndDate = {
+        id: '1',
+        title: 'New todo item',
+        status: 'pending',
+        dateCreated: new Date().toISOString()
+      }
 
       // Reset the database to blank
       setupModel([]);
@@ -210,7 +217,7 @@ describe('Controller', function() {
 			view.render.calls.reset();
 			model.read.calls.reset();
 			model.read.and.callFake(function () {
-				return Promise.resolve([newTodo])
+				return Promise.resolve([newTodoWithIdAndDate])
 			});
 
       // Create a fake simulation of the event
@@ -229,7 +236,7 @@ describe('Controller', function() {
         expect(model.read).toHaveBeenCalled()
 
         // Make sure that after the call to the data store executes, render the data to the DOM
-        expect(view.render).toHaveBeenCalledWith('showTodoItems', [newTodo])
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', [newTodoWithIdAndDate])
 
         done();
       }, 100)
