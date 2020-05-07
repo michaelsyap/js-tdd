@@ -26,7 +26,6 @@
 
 
   View.prototype.bindEvent = function(event, eventHandler) {
-
     switch(event) {
       case 'createTodo':
         /**
@@ -36,6 +35,19 @@
         this.$todoCreateInput.addEventListener('change', (function() {
           eventHandler(this.$todoCreateInput.value)
         }).bind(this))
+        break;
+      case 'setTodoUpdateMode':
+        this.$todoListContainer.addEventListener('dblclick', (function dispatchEvent(event) {
+          var targetElement = event.target;
+          var potentialElements = this.$todoListContainer.querySelectorAll('.todo-title');
+          var hasMatch = Array.prototype.indexOf.call(potentialElements, targetElement) >= 0;
+
+          if (hasMatch) {
+            eventHandler.call(targetElement, event);
+          }
+        }).bind(this))
+        break;
+      case 'updateTodo':
         break;
       default:
         break;

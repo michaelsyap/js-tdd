@@ -1,5 +1,8 @@
 # Todo App implemented in TDD
 
+## Screencasts link
+https://www.youtube.com/playlist?list=PLkOLYzjSa1pr_O_A8TdjkBgoBpGj_LjUa
+
 ## User Stories
 
 1. Upon loading the app, the todo list items must be displayed

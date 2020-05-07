@@ -70,10 +70,12 @@
         return existingTodo.id === todo.id;
       });
 
+      console.log(existingTodo)
+      console.log(todo)
       console.log(existingTodoIndex)
 
       updatedArray = updatedArray.concat(todos.slice(0, existingTodoIndex));
-      updatedArray = updatedArray.concat([todo]);
+      updatedArray = updatedArray.concat([Object.assign(existingTodo, todo)]);
       updatedArray = updatedArray.concat(todos.slice(existingTodoIndex + 1));
     } else {
       updatedArray = [newTodo];

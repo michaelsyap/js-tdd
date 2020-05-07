@@ -13,6 +13,33 @@
 
     }).bind(this));
 
+    view.bindEvent('updateTodo', (function(updatedTodoParams) {
+
+      this.updateTodo(updatedTodoParams);
+
+    }).bind(this))
+
+    view.bindEvent('setTodoUpdateMode', (function(element){
+      // console.log(element.target);
+
+      var findParent = function (element, tagName) {
+        if (!element.parentNode) {
+          return;
+        }
+        if (element.parentNode.tagName.toLowerCase() === tagName.toLowerCase()) {
+          return element.parentNode;
+        }
+        return findParent(element.parentNode, tagName);
+      };
+
+      var todoIDForUpdate = findParent(element.target, 'li').getAttribute('data-id');
+
+      // console.log(findParent(element.target, 'li').getAttribute('data-id'));
+
+      this.setTodoForUpdate(todoIDForUpdate);
+
+    }).bind(this))
+
 
   }
 
@@ -69,6 +96,18 @@
 
       }).bind(this));
   };
+
+  Controller.prototype.setTodoForUpdate = function(todoIDForUpdate) {
+
+  };
+
+  Controller.prototype.updateTodo = function(updatedTodoParams) {
+    this.model.create(updatedTodoParams)
+      .then((function(resolve) {
+
+        this.setView('');
+      }).bind(this))
+  }
 
   window.app = window.app || {};
   window.app.Controller = Controller;

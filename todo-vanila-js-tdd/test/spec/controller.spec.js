@@ -247,6 +247,90 @@ describe('Controller', function() {
 
   })
 
+  describe('Updating todo items', function() {
+    it('Should be able to update the todo item with a new todo title', function(done) {
+      // Steps
+      // - Controller passes the data to the model
+      // - After the successful update to the datastore, the view renders the updated todo items
+      var eventParams = {
+        id: '3',
+        title: 'Finish homework and chores',
+      };
+      var updatedTodoList = [
+        sampleTodoItems[0],
+        sampleTodoItems[1],
+        Object.assign(sampleTodoItems[2], eventParams),
+        sampleTodoItems[3],
+      ];
+
+      setupModel(sampleTodoItems);
+
+			view.render.calls.reset();
+			model.read.calls.reset();
+			model.read.and.callFake(function () {
+				return Promise.resolve(updatedTodoList)
+			});
+
+      // - After on blur of the specific todo item, the callback event should fire to notify the update to back-end
+      view.trigger('updateTodo', eventParams);
+
+
+      // Simulate fake ajax event that has delay
+      window.setTimeout(function() {
+        //  - Controller receives the update that came from view
+        expect(model.create).toHaveBeenCalledWith(eventParams);
+
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', updatedTodoList)
+
+        done();
+      }, 100);
+
+
+    })
+
+    it('Should be able to update the todo item with an updated status', function(done) {
+      // Steps
+      // - Controller passes the data to the model
+      // - After the successful update to the datastore, the view renders the updated todo items
+      var eventParams = {
+        id: '2',
+        status: 'pending',
+      };
+      var updatedTodoList = [
+        sampleTodoItems[0],
+        Object.assign(sampleTodoItems[1], eventParams),
+        sampleTodoItems[2],
+        sampleTodoItems[3],
+      ];
+
+      setupModel(sampleTodoItems);
+
+			view.render.calls.reset();
+			model.read.calls.reset();
+			model.read.and.callFake(function () {
+				return Promise.resolve(updatedTodoList)
+			});
+
+      // - After on blur of the specific todo item, the callback event should fire to notify the update to back-end
+      view.trigger('updateTodo', eventParams);
+
+
+      // Simulate fake ajax event that has delay
+      window.setTimeout(function() {
+        //  - Controller receives the update that came from view
+        expect(model.create).toHaveBeenCalledWith(eventParams);
+
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', updatedTodoList)
+
+        done();
+      }, 100);
+
+    })
+
+
+
+  })
+
 })
 
 
