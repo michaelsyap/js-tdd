@@ -67,6 +67,9 @@ describe('Controller', function() {
 
     })
 
+    model.delete.and.callFake(function(todoId) {
+      return Promise.resolve(true);
+    });
   }
 
   function createViewMock() {
@@ -86,7 +89,7 @@ describe('Controller', function() {
   }
 
   beforeEach(function() {
-    model = jasmine.createSpyObj('model', ['create', 'read']);
+    model = jasmine.createSpyObj('model', ['create', 'read', 'delete']);
     view = createViewMock();
     controller = new app.Controller(model, view);
   })
@@ -294,7 +297,7 @@ describe('Controller', function() {
       // - After the successful update to the datastore, the view renders the updated todo items
       var eventParams = {
         id: '2',
-        status: 'pending',
+        title: 'done',
       };
       var updatedTodoList = [
         sampleTodoItems[0],
@@ -312,7 +315,7 @@ describe('Controller', function() {
 			});
 
       // - After on blur of the specific todo item, the callback event should fire to notify the update to back-end
-      view.trigger('updateTodo', eventParams);
+      view.trigger('updateTodoStatus', eventParams);
 
 
       // Simulate fake ajax event that has delay
@@ -327,8 +330,35 @@ describe('Controller', function() {
 
     })
 
+  })
 
 
+  describe('Deleting todo items', function() {
+    it('Should be able to delete a todo item', function(done) {
+      var todoId = '2';
+      var newTodoListWithDeletedTodo = [
+        sampleTodoItems[0],
+        sampleTodoItems[2],
+        sampleTodoItems[3],
+      ];
+
+      setupModel(newTodoListWithDeletedTodo);
+
+      // Simulate deleting delete button action in the UI
+      view.trigger('deleteTodo', todoId);
+
+
+      window.setTimeout(function() {
+        // Delete the todo item in the data store
+        expect(model.delete).toHaveBeenCalledWith(todoId);
+
+        // After successful deletion in the data store, call model.read() and load the
+        // new list of todo items to the UI
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', newTodoListWithDeletedTodo);
+
+        done();
+      }, 100);
+    })
   })
 
 })

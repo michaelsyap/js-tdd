@@ -13,31 +13,26 @@
 
     }).bind(this));
 
+
     view.bindEvent('updateTodo', (function(updatedTodoParams) {
 
       this.updateTodo(updatedTodoParams);
 
     }).bind(this))
 
-    view.bindEvent('setTodoUpdateMode', (function(element){
-      // console.log(element.target);
+    view.bindEvent('setTodoUpdateMode', (function(todoItemElement){
 
-      var findParent = function (element, tagName) {
-        if (!element.parentNode) {
-          return;
-        }
-        if (element.parentNode.tagName.toLowerCase() === tagName.toLowerCase()) {
-          return element.parentNode;
-        }
-        return findParent(element.parentNode, tagName);
-      };
+      this.setTodoForUpdate(todoItemElement);
 
-      var todoIDForUpdate = findParent(element.target, 'li').getAttribute('data-id');
+    }).bind(this));
 
-      // console.log(findParent(element.target, 'li').getAttribute('data-id'));
 
-      this.setTodoForUpdate(todoIDForUpdate);
+    view.bindEvent('updateTodoStatus', (function(updatedTodoParams) {
+      this.updateTodo(updatedTodoParams);
+    }).bind(this))
 
+    view.bindEvent('deleteTodo', (function(todoId) {
+      this.deleteTodo(todoId);
     }).bind(this))
 
 
@@ -97,17 +92,23 @@
       }).bind(this));
   };
 
-  Controller.prototype.setTodoForUpdate = function(todoIDForUpdate) {
-
+  Controller.prototype.setTodoForUpdate = function(todoItemElement) {
+    this.view.render('setTodoItemForTitleUpdate', todoItemElement);
   };
 
   Controller.prototype.updateTodo = function(updatedTodoParams) {
     this.model.create(updatedTodoParams)
       .then((function(resolve) {
-
         this.setView('');
       }).bind(this))
-  }
+  };
+
+  Controller.prototype.deleteTodo = function(todoId) {
+    this.model.delete(todoId)
+      .then((function(result) {
+        this.setView('');
+      }).bind(this))
+  };
 
   window.app = window.app || {};
   window.app.Controller = Controller;
