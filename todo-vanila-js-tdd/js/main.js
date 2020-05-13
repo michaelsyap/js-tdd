@@ -12,5 +12,9 @@
     controller.setView(document.location.hash);
   };
 
+  window.onhashchange = function() {
+    controller.setView(document.location.hash);
+  };
+
 
 })(window, $);
