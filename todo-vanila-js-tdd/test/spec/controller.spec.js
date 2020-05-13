@@ -143,6 +143,8 @@ describe('Controller', function() {
       return controller.setView('#pending')
               .then(function(todoItemsData) {
 
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', { status: 'pending' });
+
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalledWith({
                   status: 'pending'
@@ -350,7 +352,7 @@ describe('Controller', function() {
 
       window.setTimeout(function() {
         // Delete the todo item in the data store
-        expect(model.delete).toHaveBeenCalledWith(todoId);
+        expect(model.delete).toHaveBeenCalledWith({id: todoId});
 
         // After successful deletion in the data store, call model.read() and load the
         // new list of todo items to the UI

@@ -9,6 +9,9 @@
 
     this.$todoListContainer = document.querySelector('#todo-list-container');
     this.$todoCreateInput = document.querySelector('#todo-create-input');
+    this.$todoFilters = document.querySelector('.todo-filters');
+
+    this.prevViewStatus;
   }
 
   View.prototype.render = function(command, params) {
@@ -24,6 +27,22 @@
       setTodoItemForTitleUpdate: function() {
         console.log(params);
         self._setTodoItemForTitleUpdate(params);
+      },
+      setViewStatus: function() {
+        var newViewStatus = params ? params.status : 'all';
+        var button;
+
+        // Remove previous status if there is any
+        if(self.prevViewStatus) {
+          button = document.querySelector("[data-status='" + self.prevViewStatus + "']");
+          button.disabled = false;
+        }
+
+        button = document.querySelector("[data-status='" + newViewStatus + "']");
+        button.disabled = true;
+
+
+        self.prevViewStatus = newViewStatus;
       }
     };
 
@@ -94,6 +113,17 @@
 
 
         break;
+      case 'deleteTodo':
+        $delegate(this.$todoListContainer, '.remove-todo', 'click', function(event) {
+          var todoId = self._getId(this);
+
+          eventHandler(todoId);
+        })
+        break;
+      case 'setViewStatus':
+        $delegate(this.$todoFilters, '.btn', 'click', function(event) {
+          eventHandler(this.getAttribute('data-status'));
+        })
       default:
         break;
     }

@@ -90,8 +90,8 @@
 
 
   Store.prototype.remove = function(todo){
-    var todos = this.findAll();
-    var existingTodo = this.find(todo);
+    var todos = JSON.parse(localStorage.getItem(this.storeName));
+    var existingTodo = this._findTodoById(todos, todo);
     var existingTodoIndex;
     var updatedArray = [];
 
