@@ -126,6 +126,7 @@ describe('Controller', function() {
 
       return controller.setView('')
               .then(function(todoItemsData) {
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', null);
 
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalled()
@@ -143,6 +144,7 @@ describe('Controller', function() {
       return controller.setView('#pending')
               .then(function(todoItemsData) {
 
+                // Check if the buttons are disabled if the status is the same as its data-status
                 expect(view.render).toHaveBeenCalledWith('setViewStatus', { status: 'pending' });
 
                 // Make sure the call to the data store executes
@@ -165,6 +167,9 @@ describe('Controller', function() {
 
       return controller.setView('#done')
               .then(function(todoItemsData) {
+
+                // Check if the buttons are disabled if the status is the same as its data-status
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', { status: 'done' });
 
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalledWith({
