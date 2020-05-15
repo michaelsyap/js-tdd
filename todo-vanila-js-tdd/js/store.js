@@ -42,19 +42,10 @@
       return true;
     });
 
-    return filter ? query : todos || [];
+    return filter ? Promise.resolve(query) : Promise.resolve(todos || []);
   };
 
-
-
-
-  /**
-   * To find through localStorage for a specific todo item
-   *
-   * @param {object} todo The object that contains the id of the todo to find in the localStorage DB
-   */
-  Store.prototype.find = function(todo){
-    var todos = this.findAll();
+  Store.prototype._findTodoById = (todos, todo) => {
     var filteredTodos = [];
 
     filteredTodos = todos.filter(function(todoItem) {
@@ -62,11 +53,11 @@
     });
 
     return filteredTodos.length > 0 ? filteredTodos[0] : null;
-  };
+  }
 
   Store.prototype.save = function(todo){
-    var todos = this.findAll();
-    var existingTodo = this.find(todo);
+    var todos = JSON.parse(localStorage.getItem(this.storeName));
+    var existingTodo = this._findTodoById(todos, todo);
     var existingTodoIndex;
     var updatedArray = [];
     var newTodo = !existingTodo && Object.assign({
@@ -74,18 +65,17 @@
       dateCreated: new Date().toISOString()
     }, todo);
 
-    console.log(existingTodo);
-    console.log(todos);
-
     if(existingTodo) {
       existingTodoIndex = todos.findIndex(function(todo) {
         return existingTodo.id === todo.id;
       });
 
+      console.log(existingTodo)
+      console.log(todo)
       console.log(existingTodoIndex)
 
       updatedArray = updatedArray.concat(todos.slice(0, existingTodoIndex));
-      updatedArray = updatedArray.concat([todo]);
+      updatedArray = updatedArray.concat([Object.assign(existingTodo, todo)]);
       updatedArray = updatedArray.concat(todos.slice(existingTodoIndex + 1));
     } else {
       updatedArray = [newTodo];
@@ -100,8 +90,8 @@
 
 
   Store.prototype.remove = function(todo){
-    var todos = this.findAll();
-    var existingTodo = this.find(todo);
+    var todos = JSON.parse(localStorage.getItem(this.storeName));
+    var existingTodo = this._findTodoById(todos, todo);
     var existingTodoIndex;
     var updatedArray = [];
 
@@ -115,10 +105,10 @@
 
       localStorage.setItem(this.storeName, JSON.stringify(updatedArray))
 
-      return true;
+      return Promise.resolve(true);
     }
 
-    return false;
+    return Promise.resolve(false);
   };
 
 

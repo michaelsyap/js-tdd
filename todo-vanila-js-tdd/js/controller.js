@@ -14,11 +14,38 @@
     }).bind(this));
 
 
+    view.bindEvent('updateTodo', (function(updatedTodoParams) {
+
+      this.updateTodo(updatedTodoParams);
+
+    }).bind(this))
+
+    view.bindEvent('setTodoUpdateMode', (function(todoItemElement){
+
+      this.setTodoForUpdate(todoItemElement);
+
+    }).bind(this));
+
+
+    view.bindEvent('updateTodoStatus', (function(updatedTodoParams) {
+      this.updateTodo(updatedTodoParams);
+    }).bind(this))
+
+    view.bindEvent('deleteTodo', (function(todoId) {
+      this.deleteTodo(todoId);
+    }).bind(this))
+
+    view.bindEvent('setViewStatus', (function(viewStatus) {
+      this._setViewStatus(viewStatus)
+    }).bind(this));
+
+    this.currentLocationHash;
   }
 
   Controller.prototype.setView = function(locationHash) {
+    this.currentLocationHash = locationHash || this.currentLocationHash || '';
     // all, pending, done
-    var route = locationHash.split('#')[1];
+    var route = this.currentLocationHash.split('#')[1];
     var listFilter = route || '';
     return this._filterTodoItems(listFilter)
   };
@@ -39,6 +66,9 @@
     var validFilter = this._verifyValidFilter(filter);
     var filterObj = validFilter ? { status: filter } : null;
 
+    this.view.render('setViewStatus', filterObj);
+
+
     return new Promise((function(resolve, reject) {
 
       this.model.read(filterObj)
@@ -55,6 +85,11 @@
   }
 
 
+  Controller.prototype._setViewStatus = function(viewStatus) {
+    document.location.hash = '#' + viewStatus;
+  }
+
+
   Controller.prototype.createTodo = function(todo) {
     this.model.create(todo)
       .then((function(result) {
@@ -68,6 +103,24 @@
         this.setView('');
 
       }).bind(this));
+  };
+
+  Controller.prototype.setTodoForUpdate = function(todoItemElement) {
+    this.view.render('setTodoItemForTitleUpdate', todoItemElement);
+  };
+
+  Controller.prototype.updateTodo = function(updatedTodoParams) {
+    this.model.create(updatedTodoParams)
+      .then((function(resolve) {
+        this.setView('');
+      }).bind(this))
+  };
+
+  Controller.prototype.deleteTodo = function(todoId) {
+    this.model.delete({id: todoId})
+      .then((function(result) {
+        this.setView('');
+      }).bind(this))
   };
 
   window.app = window.app || {};

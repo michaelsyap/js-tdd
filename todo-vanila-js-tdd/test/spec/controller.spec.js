@@ -10,19 +10,19 @@ describe('Controller', function() {
     },
     {
       id: '2',
-      title: 'Buy some apples from the grocery',
+      title: 'Get some gifts',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
       id: '3',
-      title: 'Buy some apples from the grocery',
+      title: 'Finish homework',
       status: 'pending',
       dateCreated: new Date().toISOString()
     },
     {
       id: '4',
-      title: 'Buy some apples from the grocery',
+      title: 'Sleep by 10pm',
       status: 'done',
       dateCreated: new Date().toISOString()
     },
@@ -33,7 +33,8 @@ describe('Controller', function() {
 
     model.create.and.callFake(function(newTodoItem) {
       return Promise.resolve(Object.assign({
-        id: '1'
+        id: '1',
+        dateCreated: new Date().toISOString()
       }, newTodoItem))
     });
 
@@ -66,9 +67,12 @@ describe('Controller', function() {
 
     })
 
+    model.delete.and.callFake(function(todoId) {
+      return Promise.resolve(true);
+    });
   }
 
-  function createViewStub() {
+  function createViewMock() {
     var eventRegistry = {};
 
     return {
@@ -85,8 +89,8 @@ describe('Controller', function() {
   }
 
   beforeEach(function() {
-    model = jasmine.createSpyObj('model', ['create', 'read']);
-    view = createViewStub();
+    model = jasmine.createSpyObj('model', ['create', 'read', 'delete']);
+    view = createViewMock();
     controller = new app.Controller(model, view);
   })
 
@@ -122,6 +126,7 @@ describe('Controller', function() {
 
       return controller.setView('')
               .then(function(todoItemsData) {
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', null);
 
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalled()
@@ -138,6 +143,9 @@ describe('Controller', function() {
 
       return controller.setView('#pending')
               .then(function(todoItemsData) {
+
+                // Check if the buttons are disabled if the status is the same as its data-status
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', { status: 'pending' });
 
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalledWith({
@@ -159,6 +167,9 @@ describe('Controller', function() {
 
       return controller.setView('#done')
               .then(function(todoItemsData) {
+
+                // Check if the buttons are disabled if the status is the same as its data-status
+                expect(view.render).toHaveBeenCalledWith('setViewStatus', { status: 'done' });
 
                 // Make sure the call to the data store executes
                 expect(model.read).toHaveBeenCalledWith({
@@ -202,6 +213,12 @@ describe('Controller', function() {
         title: 'New todo item',
         status: 'pending'
       };
+      var newTodoWithIdAndDate = {
+        id: '1',
+        title: 'New todo item',
+        status: 'pending',
+        dateCreated: new Date().toISOString()
+      }
 
       // Reset the database to blank
       setupModel([]);
@@ -210,7 +227,7 @@ describe('Controller', function() {
 			view.render.calls.reset();
 			model.read.calls.reset();
 			model.read.and.callFake(function () {
-				return Promise.resolve([newTodo])
+				return Promise.resolve([newTodoWithIdAndDate])
 			});
 
       // Create a fake simulation of the event
@@ -229,7 +246,7 @@ describe('Controller', function() {
         expect(model.read).toHaveBeenCalled()
 
         // Make sure that after the call to the data store executes, render the data to the DOM
-        expect(view.render).toHaveBeenCalledWith('showTodoItems', [newTodo])
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', [newTodoWithIdAndDate])
 
         done();
       }, 100)
@@ -238,6 +255,117 @@ describe('Controller', function() {
 
 
 
+  })
+
+  describe('Updating todo items', function() {
+    it('Should be able to update the todo item with a new todo title', function(done) {
+      // Steps
+      // - Controller passes the data to the model
+      // - After the successful update to the datastore, the view renders the updated todo items
+      var eventParams = {
+        id: '3',
+        title: 'Finish homework and chores',
+      };
+      var updatedTodoList = [
+        sampleTodoItems[0],
+        sampleTodoItems[1],
+        Object.assign(sampleTodoItems[2], eventParams),
+        sampleTodoItems[3],
+      ];
+
+      setupModel(sampleTodoItems);
+
+			view.render.calls.reset();
+			model.read.calls.reset();
+			model.read.and.callFake(function () {
+				return Promise.resolve(updatedTodoList)
+			});
+
+      // - After on blur of the specific todo item, the callback event should fire to notify the update to back-end
+      view.trigger('updateTodo', eventParams);
+
+
+      // Simulate fake ajax event that has delay
+      window.setTimeout(function() {
+        //  - Controller receives the update that came from view
+        expect(model.create).toHaveBeenCalledWith(eventParams);
+
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', updatedTodoList)
+
+        done();
+      }, 100);
+
+
+    })
+
+    it('Should be able to update the todo item with an updated status', function(done) {
+      // Steps
+      // - Controller passes the data to the model
+      // - After the successful update to the datastore, the view renders the updated todo items
+      var eventParams = {
+        id: '2',
+        title: 'done',
+      };
+      var updatedTodoList = [
+        sampleTodoItems[0],
+        Object.assign(sampleTodoItems[1], eventParams),
+        sampleTodoItems[2],
+        sampleTodoItems[3],
+      ];
+
+      setupModel(sampleTodoItems);
+
+			view.render.calls.reset();
+			model.read.calls.reset();
+			model.read.and.callFake(function () {
+				return Promise.resolve(updatedTodoList)
+			});
+
+      // - After on blur of the specific todo item, the callback event should fire to notify the update to back-end
+      view.trigger('updateTodoStatus', eventParams);
+
+
+      // Simulate fake ajax event that has delay
+      window.setTimeout(function() {
+        //  - Controller receives the update that came from view
+        expect(model.create).toHaveBeenCalledWith(eventParams);
+
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', updatedTodoList)
+
+        done();
+      }, 100);
+
+    })
+
+  })
+
+
+  describe('Deleting todo items', function() {
+    it('Should be able to delete a todo item', function(done) {
+      var todoId = '2';
+      var newTodoListWithDeletedTodo = [
+        sampleTodoItems[0],
+        sampleTodoItems[2],
+        sampleTodoItems[3],
+      ];
+
+      setupModel(newTodoListWithDeletedTodo);
+
+      // Simulate deleting delete button action in the UI
+      view.trigger('deleteTodo', todoId);
+
+
+      window.setTimeout(function() {
+        // Delete the todo item in the data store
+        expect(model.delete).toHaveBeenCalledWith({id: todoId});
+
+        // After successful deletion in the data store, call model.read() and load the
+        // new list of todo items to the UI
+        expect(view.render).toHaveBeenCalledWith('showTodoItems', newTodoListWithDeletedTodo);
+
+        done();
+      }, 100);
+    })
   })
 
 })

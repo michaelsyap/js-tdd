@@ -40,7 +40,7 @@
         +    '</div>'
         +    '<div class="title-column col-md-10">'
         +      '<span class="todo-title">{{title}}</span>'
-        +      '<input class="form-control todo-title-edit"  />'
+        // +      '<input class="form-control todo-title-edit"  />'  for removal
         +    '</div>'
         +    '<button class="btn btn-danger remove-todo">X</button>'
         +  '</div>'
@@ -73,7 +73,7 @@
 			var status = '';
 			var checked = '';
 
-			if (data[i].status === ' done') {
+			if (data[i].status === 'done') {
 				status = ' --done';
 				checked = 'checked';
 			}
